@@ -1,0 +1,195 @@
+{% extends 'template1/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load i18n %}
+{% load l10n %}
+
+{% block custom_style %}
+<style>
+    .iframe-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 50%;
+        background: lightgrey;
+    }
+
+    .iframe-container iframe {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 1px solid red;
+    }
+    
+</style>
+<!-- {% if not data_list %} 
+<style>
+    .eah {
+        position: absolute;
+    background-color: green;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+</style>
+{% endif %} -->
+{% endblock custom_style %}
+
+
+{% block content %}
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="breadcrumb-item text-dark" href="{% url 'ecommerce:index' %}">Beranda</a>
+                <span class="breadcrumb-item active">Cari</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Products Start -->
+<div class="container-fluid pt-5 pb-3">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Produk</span></h2>
+    <div class="row px-xl-5">
+        {% if data_list %} 
+        {% for i in data_list %}
+        <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+            <div class="product-item bg-light mb-4">
+                <div class="product-img position-relative overflow-hidden">
+                    <img class="img-fluid w-100" style="height: 300px;" src="{{ i.thumbnail }}" alt="">
+                    <div class="product-action">
+                        <a class="btn btn-outline-dark btn-square" href="{{ i.get_absolute_url }}"><i class="fa fa-search"></i></a>
+                    </div>
+                </div>
+                <div class="text-center py-4">
+                    <a class="h6 text-decoration-none text-truncate" href="{{ i.get_absolute_url }}">{{ i.nama_produk }}</a>
+                    <div class="d-flex align-items-center justify-content-center mt-2">
+                        {% language 'id' %}<h5>Rp.{{ i.harga|intcomma }}</h5><h6 class="text-muted ml-2"><del>Rp.{{ i.harga_coret|intcomma }}</del></h6>{% endlanguage %}
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center mb-1">
+                        <small class="{% if i.averagereview <= 0.5 and i.averagereview > 0 %}fa fa-star-half-alt{% elif i.averagereview >= 0.5 and i.averagereview < 1 %}fa fa-star{% else %}fa fa-star{% endif %} text-primary mr-1"></small>
+                        <small class="{% if i.averagereview <= 1.5 and i.averagereview > 1 %}fa fa-star-half-alt{% elif i.averagereview >= 1.5 and i.averagereview < 2 %}fa fa-star{% else %}fa fa-star{% endif %} text-primary mr-1"></small>
+                        <small class="{% if i.averagereview <= 2.5 and i.averagereview > 2 %}fa fa-star-half-alt{% elif i.averagereview >= 2.5 and i.averagereview < 3 %}fa fa-star{% else %}fa fa-star{% endif %} text-primary mr-1"></small>
+                        <small class="{% if i.averagereview <= 3.5 and i.averagereview > 3 %}fa fa-star-half-alt{% elif i.averagereview >= 3.5 and i.averagereview < 4 %}fa fa-star{% else %}far fa-star{% endif %} text-primary mr-1"></small>
+                        <small class="{% if i.averagereview <= 4.5 and i.averagereview > 4 %}fa fa-star-half-alt{% elif i.averagereview >= 4.5 and i.averagereview < 5 %}fa fa-star{% else %}far fa-star{% endif %} text-primary mr-1"></small>
+                        <small>({{ i.review_produk.all.count }})</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="col-12 product-item bg-light mb-4">
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading">Tidak ada produk</h4>
+                <p>Maaf, produk yang Anda cari tidak ditemukan.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<!-- Products End -->
+
+
+<!--</div> pagination -->
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      {% if data_list.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ data_list.previous_page_number }}" aria-label="Previous">Prev</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Previous">Prev</a>
+            </li>
+        {% endif %}
+
+        {% if data_list.number|add:'-4' > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ data_list.number|add:'-5' }}" aria-label="Page">
+                    <span>&hellip;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for i in data_list.paginator.page_range %}
+            {% if data_list.number == i %}
+                <li class="page-item active">
+                    <a class="page-link" href="#" aria-label="Page">
+                        <span>{{ i }}</span>
+                    </a>
+                </li>
+            {% elif i > data_list.number|add:'-5' and i < data_list.number|add:'5' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}" aria-label="Page">
+                        <span>{{ i }}</span>
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if data_list.paginator.num_pages > data_list.number|add:'4' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ data_list.number|add:'5' }}" aria-label="Page">
+                    <span>&hellip;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% if data_list.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ data_list.next_page_number }}" aria-label="Next">Next</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" aria-label="Next">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+<!-- pagination end -->
+
+  <!-- Products Start -->
+<div class="container-fluid py-5">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Produk Lainnya</span></h2>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel related-carousel">
+                {% for i in random_list %}
+
+                <div class="product-item bg-light">
+                    <div class="product-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" style="height: 300px;" src="{{ i.thumbnail }}" alt="">
+                        <div class="product-action">
+                            <a class="btn btn-outline-dark btn-square" href="{{ i.get_absolute_url }}"><i class="fa fa-search"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <a class="h6 text-decoration-none text-truncate" href="">{{ i.get_absolute_url }}</a>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            {% language 'id' %}<h5>Rp.{{ i.harga|intcomma }}</h5><h6 class="text-muted ml-2"><del>Rp.{{ i.harga_coret|intcomma }}</del></h6>{% endlanguage %}
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            <small class="{% if i.averagereview <= 0.5 and i.averagereview > 0 %}fa fa-star-half-alt{% elif i.averagereview >= 0.5 and i.averagereview < 1 %}fa fa-star{% else %}fa fa-star{% endif %} text-primary mr-1"></small>
+                            <small class="{% if i.averagereview <= 1.5 and i.averagereview > 1 %}fa fa-star-half-alt{% elif i.averagereview >= 1.5 and i.averagereview < 2 %}fa fa-star{% else %}fa fa-star{% endif %} text-primary mr-1"></small>
+                            <small class="{% if i.averagereview <= 2.5 and i.averagereview > 2 %}fa fa-star-half-alt{% elif i.averagereview >= 2.5 and i.averagereview < 3 %}fa fa-star{% else %}fa fa-star{% endif %} text-primary mr-1"></small>
+                            <small class="{% if i.averagereview <= 3.5 and i.averagereview > 3 %}fa fa-star-half-alt{% elif i.averagereview >= 3.5 and i.averagereview < 4 %}fa fa-star{% else %}far fa-star{% endif %} text-primary mr-1"></small>
+                            <small class="{% if i.averagereview <= 4.5 and i.averagereview > 4 %}fa fa-star-half-alt{% elif i.averagereview >= 4.5 and i.averagereview < 5 %}fa fa-star{% else %}far fa-star{% endif %} text-primary mr-1"></small>
+                            <small>({{ i.review_produk.all.count }})</small>
+                        </div>
+                    </div>
+                </div>
+                
+                {% endfor %}                    
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Products End -->
+{% endblock content %}

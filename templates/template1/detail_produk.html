@@ -1,0 +1,194 @@
+{% extends 'template1/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load i18n %}
+{% load l10n %}
+
+{% block custom_style %}
+<style>
+    .iframe-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 50%;
+        background: lightgrey;
+    }
+
+    .iframe-container iframe {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 1px solid red;
+    }
+</style>
+{% endblock custom_style %}
+
+{% block content %} 
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="breadcrumb-item text-dark" href="{% url 'ecommerce:index' %}">Beranda</a>
+                <span class="breadcrumb-item active">Product Detail</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+
+<!-- Shop Detail Start -->
+<div class="container-fluid pb-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 mb-30">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner bg-light">
+                    <div class="carousel-item active">
+                        <img class="w-100 h-100" src="{{ data.carousel1 }}" alt="Image">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="w-100 h-100" src="{{ data.carousel2 }}" alt="Image">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="w-100 h-100" src="{{ data.carousel3 }}" alt="Image">
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+                    <i class="fa fa-2x fa-angle-left text-dark"></i>
+                </a>
+                <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+                    <i class="fa fa-2x fa-angle-right text-dark"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-7 h-auto mb-30">
+            <div class="h-100 bg-light p-30">
+                <h3>{{ data.nama_produk }}</h3>
+                <div class="d-flex mb-3">
+                    <div class="text-primary mr-2">
+                        <small class="{% if data.averagereview <= 0.5 and data.averagereview > 0 %}fa fa-star-half-alt{% elif data.averagereview >= 0.5 and data.averagereview < 1 %}fa fa-star{% else %}fa fa-star{% endif %}"></small>
+                        <small class="{% if data.averagereview <= 1.5 and data.averagereview > 1 %}fa fa-star-half-alt{% elif data.averagereview >= 1.5 and data.averagereview < 2 %}fa fa-star{% else %}fa fa-star{% endif %}"></small>
+                        <small class="{% if data.averagereview <= 2.5 and data.averagereview > 2 %}fa fa-star-half-alt{% elif data.averagereview >= 2.5 and data.averagereview < 3 %}fa fa-star{% else %}fa fa-star{% endif %}"></small>
+                        <small class="{% if data.averagereview <= 3.5 and data.averagereview > 3 %}fa fa-star-half-alt{% elif data.averagereview >= 3.5 and data.averagereview < 4 %}fa fa-star{% else %}far fa-star{% endif %}"></small>
+                        <small class="{% if data.averagereview <= 4.5 and data.averagereview > 4 %}fa fa-star-half-alt{% elif data.averagereview >= 4.5 and data.averagereview < 5 %}fa fa-star{% else %}far fa-star{% endif %}"></small>
+                    </div>
+                    <small class="pt-1">({{ data.review_produk.all.count }} Reviews)</small>
+                </div>
+                {% language 'id' %}<h3 class="font-weight-semi-bold mb-4">Rp.{{ data.harga|intcomma }}</h3>{% endlanguage %}
+                <p class="mb-4">{{ data.deskripsi1 }}</p>
+                <div class="d-flex align-items-center mb-4 pt-2">
+                    <a href="https://wa.me/+625715980900?text=I'm%20interested%20in%20{{ data.nama_produk }}"><button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i>Chat By WA</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="bg-light p-30">
+                <div class="nav nav-tabs mb-4">
+                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Deskripsi</a>
+                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Informasi</a>
+                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-3">Reviews</a>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-pane-1">
+                        <h4 class="mb-3">Deskripsi Produk</h4>
+                        {{ data.deskripsi2|linebreaks }}
+                    </div>
+                    <div class="tab-pane fade" id="tab-pane-2">
+                        <h4 class="mb-3">Informasi Tambahan</h4>
+
+                        <div class="iframe-container"><iframe src="{{ data.info_tambahan }}" width="640" height="480" allow="autoplay"></iframe></div><br>
+                        <!-- <iframe src="{{ data.info_tambahan }}" width="640" height="480" allow="autoplay"></iframe> -->
+                        <p>{{ data.informasi1|linebreaks }}</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item px-0">
+                                        {{ data.informasi2 }}
+                                    </li>
+                                </ul> 
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item px-0">
+                                        {{ data.informasi3 }}
+                                    </li>
+                                  </ul> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab-pane-3">
+                        <h4 class="mb-4">{{ data.review_produk.all.count }} review for {{ data.nama_produk }}</h4>
+                        {% for i in data.getReview %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="media mb-4">
+                                    <img src="{% static 'template1/img/user2.jpg' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                    <div class="media-body">
+                                        <h6>{{ i.reviewers }}<small> - <i>{{ i.tanggal }}</i></small></h6>
+                                        <div class="text-primary mb-2">
+                                            <i class="{% if i.ratings <= 0.5 and i.ratings > 0 %}fas fa-star-half-alt{% elif i.ratings >= 0.5 and i.ratings < 1 %}fas fa-star{% else %}fas fa-star{% endif %}"></i>
+                                            <i class="{% if i.ratings <= 1.5 and i.ratings > 1 %}fas fa-star-half-alt{% elif i.ratings >= 1.5 and i.ratings < 2 %}fas fa-star{% else %}fas fa-star{% endif %}"></i>
+                                            <i class="{% if i.ratings <= 2.5 and i.ratings > 2 %}fas fa-star-half-alt{% elif i.ratings >= 2.5 and i.ratings < 3 %}fas fa-star{% else %}fas fa-star{% endif %}"></i>
+                                            <i class="{% if i.ratings <= 3.5 and i.ratings > 3 %}fas fa-star-half-alt{% elif i.ratings >= 3.5 and i.ratings < 4 %}fas fa-star{% else %}far fa-star{% endif %}"></i>
+                                            <i class="{% if i.ratings <= 4.5 and i.ratings > 4 %}fas fa-star-half-alt{% elif i.ratings >= 4.5 and i.ratings < 5 %}fas fa-star{% else %}far fa-star{% endif %}"></i>
+                                        </div>
+                                        <p>{{ i.review }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Shop Detail End -->
+
+
+<!-- Products Start -->
+<div class="container-fluid py-5">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Produk Lainnya</span></h2>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel related-carousel">
+                {% for i in random_list %}
+
+                <div class="product-item bg-light">
+                    <div class="product-img position-relative overflow-hidden">
+                        <img class="img-fluid w-100" style="height: 300px;" src="{{ i.thumbnail }}" alt="">
+                        <div class="product-action">
+                            <a class="btn btn-outline-dark btn-square" href="{{ i.get_absolute_url }}"><i class="fa fa-search"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <a class="h6 text-decoration-none text-truncate" href="">{{ i.get_absolute_url }}</a>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            {% language 'id' %}<h5>Rp.{{ i.harga|intcomma }}</h5><h6 class="text-muted ml-2"><del>Rp.{{ i.harga_coret|intcomma }}</del></h6>{% endlanguage %}
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mb-1">
+                            <small class="{% if i.averagereview <= 0.5 and i.averagereview > 0 %}fa fa-star-half-alt{% elif i.averagereview >= 0.5 and i.averagereview < 1 %}fa fa-star{% else %}fa fa-star{% endif %} text-primary mr-1"></small>
+                            <small class="{% if i.averagereview <= 1.5 and i.averagereview > 1 %}fa fa-star-half-alt{% elif i.averagereview >= 1.5 and i.averagereview < 2 %}fa fa-star{% else %}fa fa-star{% endif %} text-primary mr-1"></small>
+                            <small class="{% if i.averagereview <= 2.5 and i.averagereview > 2 %}fa fa-star-half-alt{% elif i.averagereview >= 2.5 and i.averagereview < 3 %}fa fa-star{% else %}fa fa-star{% endif %} text-primary mr-1"></small>
+                            <small class="{% if i.averagereview <= 3.5 and i.averagereview > 3 %}fa fa-star-half-alt{% elif i.averagereview >= 3.5 and i.averagereview < 4 %}fa fa-star{% else %}far fa-star{% endif %} text-primary mr-1"></small>
+                            <small class="{% if i.averagereview <= 4.5 and i.averagereview > 4 %}fa fa-star-half-alt{% elif i.averagereview >= 4.5 and i.averagereview < 5 %}fa fa-star{% else %}far fa-star{% endif %} text-primary mr-1"></small>
+                            <small>({{ i.review_produk.all.count }})</small>
+                        </div>
+                    </div>
+                </div>
+                
+                {% endfor %}                    
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Products End -->
+{% endblock content %}
