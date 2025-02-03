@@ -175,6 +175,3 @@ cython_debug/
 
 # myvenv
 myvenv/
-
-# dbsqlite
-db.sqlite3
