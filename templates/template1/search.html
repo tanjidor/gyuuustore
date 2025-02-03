@@ -171,7 +171,7 @@
                         </div>
                     </div>
                     <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href="">{{ i.get_absolute_url }}</a>
+                        <a class="h6 text-decoration-none text-truncate" href="{{ i.get_absolute_url }}">{{ i.nama_produk }}</a>
                         <div class="d-flex align-items-center justify-content-center mt-2">
                             {% language 'id' %}<h5>Rp.{{ i.harga|intcomma }}</h5><h6 class="text-muted ml-2"><del>Rp.{{ i.harga_coret|intcomma }}</del></h6>{% endlanguage %}
                         </div>
