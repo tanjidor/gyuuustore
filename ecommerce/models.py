@@ -8,11 +8,11 @@ class Produk(models.Model):
     nama_produk = models.CharField(max_length=255, blank=False, null=False)
     harga = models.IntegerField(default=0)
     harga_coret = models.IntegerField(default=0)
-    deskripsi1 = models.TextField(verbose_name='Deskripsi Atas') # deskripsi atas
-    deskripsi2 = models.TextField(verbose_name='Deskripsi Bawah') # deskripsi bawah
-    informasi1 = models.TextField(verbose_name='Main Informasi') # informasi
-    informasi2 = models.TextField(verbose_name='Bottom Left Informasi') # informasi kiri bawah 
-    informasi3 = models.TextField(verbose_name='Bottom Right Informasi') # informasi kanan bawah
+    deskripsi1 = models.TextField(verbose_name='Deskripsi Atas', default="") # deskripsi atas
+    deskripsi2 = models.TextField(verbose_name='Deskripsi Bawah', default="") # deskripsi bawah
+    informasi1 = models.TextField(verbose_name='Main Informasi', default="") # informasi
+    informasi2 = models.TextField(verbose_name='Bottom Left Informasi', default="") # informasi kiri bawah 
+    informasi3 = models.TextField(verbose_name='Bottom Right Informasi', default="") # informasi kanan bawah
     sold = models.IntegerField(default=1)
     # thumbnail, carousel1, carousel2, carousel3, info_tambahan
     thumbnail = models.URLField(max_length=255, blank=True, null=True)
